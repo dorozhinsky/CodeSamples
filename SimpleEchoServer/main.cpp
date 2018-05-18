@@ -32,9 +32,34 @@ void sighandler(int signum, siginfo_t *info, void *ptr)
 }
 
 
-int main(void)
+int main(int argc, char* argv[])
 {
+	int opt = 0;
+	unsigned short port = 22000;
+
 	printf("Simple TCP server. Version 1.0, Build: %s %s\n", __DATE__, __TIME__);
+
+	// Get parameters
+	while ((opt = getopt(argc, argv, "hp:")) != -1)
+	{
+		switch (opt)
+		{
+		case 'h':
+			printf("Usage:\n\t%s [-h] [-p <port_number>]\n", argv[0]);
+			exit(EXIT_SUCCESS);
+			break;
+
+		case 'p':
+			port = atoi(optarg);
+			break;
+
+		default: /* '?' */
+			fprintf(stderr, "Usage:\n\t %s [-h] [-p <port_number>]\n", argv[0]);
+			exit(EXIT_FAILURE);
+		}
+	}
+
+
 	// Configure signals
 	memset(&act, 0, sizeof(act));
 
@@ -48,7 +73,7 @@ int main(void)
 	sigaction(SIGINT, &act, NULL);
 
 	// Wait for the signals and run the server
-	return ServerRunner(22000);
+	return ServerRunner(port);
 }
 
 
