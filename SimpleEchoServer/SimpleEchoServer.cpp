@@ -27,8 +27,11 @@ void ServerWorkerCleanup(void* params)
 	{
 		const char* msg = "Good by!\n";
 		int comm_fd = *((int*)params);
+		int ret = 0;
 
-		write(comm_fd, msg, strlen(msg));
+		ret = write(comm_fd, msg, strlen(msg));
+		printf("INF: %d byte(s) were written to socket %d\n", ret, comm_fd);
+
 		close(comm_fd);
 		free(params);
 		printf("INF: comm_fd %d was closed\n", comm_fd);
@@ -39,6 +42,7 @@ void* ServerWorker(void* params)
 {
 	char str[100];
 	int comm_fd = 0;
+	int ret = 0;
 
 	if (NULL == params)
 	{
@@ -49,7 +53,8 @@ void* ServerWorker(void* params)
 	comm_fd = *((int*)params);
 
 	snprintf(str, sizeof(str), "Welcome to TCP simple server, ID=%lu\n>", pthread_self());
-	write(comm_fd, str, strlen(str)+1);
+	ret = write(comm_fd, str, strlen(str)+1);
+	printf("INF: %d byte(s) were written to socket %d\n", ret, comm_fd);
 
 	while(1)
 	{
@@ -58,8 +63,10 @@ void* ServerWorker(void* params)
 			break;
 
 		printf("INF: Echoing back - %s\n",str);
-		write(comm_fd, str, strlen(str)+1);
-		write(comm_fd, (char*)"\n>", 2);
+		ret = write(comm_fd, str, strlen(str)+1);
+		printf("INF: %d byte(s) were written to socket %d\n", ret, comm_fd);
+		ret = write(comm_fd, (char*)"\n>", 2);
+		printf("INF: %d byte(s) were written to socket %d\n", ret, comm_fd);
 	}
 
 	return NULL;
@@ -69,6 +76,7 @@ void* ServerWorker(void* params)
 int ServerRunner(const unsigned short listenPort)
 {
 	int listen_fd = -1;
+	int ret = 0;
 	struct sockaddr_in servaddr;
 
 	printf("INF: Starting TCP server...\n");
@@ -128,7 +136,8 @@ int ServerRunner(const unsigned short listenPort)
 			const char* errMsg = "Server error!!!\n";
 
 			perror("Unable to alloc thread memory");
-			write(comm_fd, (void*)errMsg, strlen(errMsg));
+			ret = write(comm_fd, (void*)errMsg, strlen(errMsg));
+			printf("INF: %d byte(s) were written to socket %d\n", ret, comm_fd);
 			close(comm_fd);
 			continue;
 		}
@@ -142,7 +151,8 @@ int ServerRunner(const unsigned short listenPort)
 			const char* errMsg = "Server error!!!\n";
 
 			perror("Unable to alloc thread memory");
-			write(comm_fd, (void*)errMsg, strlen(errMsg));
+			ret = write(comm_fd, (void*)errMsg, strlen(errMsg));
+			printf("INF: %d byte(s) were written to socket %d\n", ret, comm_fd);
 			close(comm_fd);
 			free(threadParams);
 
@@ -155,7 +165,8 @@ int ServerRunner(const unsigned short listenPort)
 			const char* errMsg = "Server error!!!\n";
 
 			perror("Unable to start a worker thread\n");
-			write(comm_fd, (void*)errMsg, strlen(errMsg));
+			ret = write(comm_fd, (void*)errMsg, strlen(errMsg));
+			printf("INF: %d byte(s) were written to socket %d\n", ret, comm_fd);
 			close(comm_fd);
 			free(threadParams->params);
 			free(threadParams);
