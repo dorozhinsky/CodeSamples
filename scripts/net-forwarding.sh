@@ -12,6 +12,15 @@ set -eu #-o pipefail
 WAN_ETH="wlo1"
 LAN_ETH="enp0s25"
 
+if [ $# -lt 2 ]; then
+    echo "The default values for LAN and WAN interfaces will be used"
+else
+    LAN_ETH=$1
+    WAN_ETH=$2
+fi
+
+echo "LAN interface = ${LAN_ETH}, WAN interface = ${WAN_ETH}"
+
 # Always accept loopback traffic
 iptables -A INPUT -i lo -j ACCEPT
 
@@ -32,4 +41,6 @@ iptables -t nat -A POSTROUTING -o ${WAN_ETH} -j MASQUERADE
 iptables -A FORWARD -i ${WAN_ETH} -o ${LAN_ETH} -m state --state RELATED,ESTABLISHED -j ACCEPT
 # Allow outgoing connections from the LAN side.
 iptables -A FORWARD -i ${LAN_ETH} -o ${WAN_ETH} -j ACCEPT
+
+echo "Interface forwarding was enabled"
 
