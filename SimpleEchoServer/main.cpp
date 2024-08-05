@@ -13,7 +13,7 @@
 
 #include "SimpleEchoServer.hpp"
 
-// Gloabal variables
+// Global variables
 static struct sigaction act;
 
 // Signal handler
