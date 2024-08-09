@@ -9,8 +9,9 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
-#include <exception>
+#include <stdexcept>
 #include <cstring>
+#include <utility> // for std::move() to use move semantics
 
 
 std::vector<std::string> generateIPAddresses(std::string &str)
@@ -111,17 +112,26 @@ const size_t octet2Offset = octet1DigitCnt;
         }
     }
 
-    return validIPs;
+    return validIPs; // The compiler should perform RVO here. Otherwise move semantics can be used.
+    //return std::move(validIPs); // Move semantics
 }
 
 int main(int argc, char* argv[])
 {
     try
     {
-        std::cout << "Please enter the string containing digits>\a";
+        std::string inputStr;
 
-    std::string inputStr;
-    std::cin >> inputStr;
+        if (argc > 1)
+        {
+            inputStr.append(argv[1]);
+        }
+        else
+        {
+            std::cout << "Please enter the string containing digits>\a";
+            std::cin >> inputStr;
+    }
+
     std::vector<std::string> generatedIPs(generateIPAddresses(inputStr));
 
     std::cout << "Generated IPs" << std::endl;
