@@ -14,6 +14,9 @@
 #include <utility> // for std::move() to use move semantics
 
 
+/// @brief Generates all valid IPv4 addresses from the provided string of digits.
+/// @param str String with the digits to be used for the IPv4 addresses generation.
+/// @return Returns vector of the strings containing all generated IPv4 addresses.
 std::vector<std::string> generateIPAddresses(std::string &str)
 {
     const auto strSize = str.size();
