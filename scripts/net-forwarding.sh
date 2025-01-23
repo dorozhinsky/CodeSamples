@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 #If you have 2 NICs on a Linux box, both configured with IP's you don't have to add a route from one network to another. That will be done automatically.
 #Add a default gateway address on the WAN NIC. Do not do this in the configuration of the LAN NIC.
@@ -7,7 +7,7 @@
 #To make it auto-set this value on boot uncomment this line in/etc/sysctl.conf
 #net.ipv4.ip_forward=1
 
-set -eu #-o pipefail
+set -euo pipefail
 
 WAN_ETH="wlo1"
 LAN_ETH="enp0s25"
