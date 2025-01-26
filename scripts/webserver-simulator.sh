@@ -11,8 +11,8 @@ set -euo pipefail
 LISTEN_PORT="8080"
 readonly RESPONSE_FILE="/tmp/webserver-simulator-response.html"
 
-trap "echo 'Got SIGINT, terminating...'; exit" SIGINT
-trap "echo 'Got SIGTERM, terminating...'; exit" SIGTERM
+trap "echo 'Got SIGINT, terminating...'; rm ${RESPONSE_FILE}; exit" SIGINT
+trap "echo 'Got SIGTERM, terminating...'; rm ${RESPONSE_FILE}; exit" SIGTERM
 
 echo "$(date +"%Y-%m-%d %H:%M:%S.%3N %Z") - Starting WebServer simulator..."
 
