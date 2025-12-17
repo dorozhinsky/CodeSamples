@@ -20,11 +20,11 @@ int main(int argc, char* argv[])
 
         if (0 != status)
         {
-            std::cout << "ERROR: system call returned non-zero status = " << status << std::endl;
+            std::cerr << "ERROR: system call returned non-zero status = " << status << std::endl;
             return status;
         }
 
-    std::cout << "Test App is terminating in " << i << " seconds      " << std::endl;
+        std::cout << "Test App is terminating in " << i << " seconds      " << std::endl;
     }
     std::cout << "Test App has terminated\a" << std::endl;
 
