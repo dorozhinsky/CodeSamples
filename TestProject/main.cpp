@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
         std::this_thread::sleep_for(std::chrono::seconds(3));
         p.set_value(123);
     });
-    
+
     std::cout << "Waiting for worker result..." << '\n';
     int result = fut.get();
     std::cout << "Worker returned " << result << '\n';
