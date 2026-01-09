@@ -15,9 +15,9 @@ typedef void (*ThreadCleanupHandler)(void* params);
 
 typedef struct ThreadExecuteParameters
 {
-	void* params;
-	ThreadExecutor executor;
-	ThreadCleanupHandler cleanupHandler;
+    void* params;
+    ThreadExecutor executor;
+    ThreadCleanupHandler cleanupHandler;
 } ThreadExecuteParameters;
 
 int CreateAndRunThread(ThreadExecuteParameters* startParams, pthread_t* startedThreadId);
