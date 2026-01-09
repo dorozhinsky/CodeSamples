@@ -10,6 +10,7 @@
 #include <thread>
 #include <future>
 #include <chrono>
+#include <memory>
 
 
 int main(int argc, char* argv[])
@@ -35,8 +36,32 @@ int main(int argc, char* argv[])
     auto add = [](int a, int b) -> int { return a + b; };
     std::cout << "Lambda add(2, 3) = " << add(2, 3) << '\n';
 
+    // std::weak_ptr example: non-owning observer of shared_ptr
+    {
+        std::cout << "\n--- std::weak_ptr demo ---" << '\n';
+        auto sp = std::make_shared<int>(42);
+        std::weak_ptr<int> wp = sp;  // observe, not own
+        std::cout << "shared_ptr use_count = " << sp.use_count() << '\n';
+        if (auto locked = wp.lock()) {
+            std::cout << "Locked value = " << *locked << '\n';
+            std::cout << "shared_ptr use_count = " << sp.use_count() << '\n';
+        } else {
+            std::cout << "Object expired" << '\n';
+        }
+        sp.reset(); // destroy the managed object
+        std::cout << "After resetting shared_ptr, expired = " << std::boolalpha << wp.expired() << '\n';
+        if (auto locked = wp.lock()) {
+            std::cout << "Locked value = " << *locked << '\n';
+            std::cout << "shared_ptr use_count = " << sp.use_count() << '\n';
+        } else {
+            std::cout << "shared_ptr use_count = " << sp.use_count() << '\n';
+            std::cout << "Object expired now" << '\n';
+        }
+        std::cout << "--- end demo ---\n\n";
+    }
+
     // App termination loop
-    for (int i = 10; i >= 0; i--)
+    for (int i = 5; i >= 0; i--)
     {
         std::this_thread::sleep_for(std::chrono::seconds(1));
         std::cout << "Test App is terminating in " << i << " seconds" << '\n';
