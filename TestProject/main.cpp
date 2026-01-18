@@ -12,6 +12,8 @@
 #include <chrono>
 #include <memory>
 
+#include "unordered_map_example.hpp"
+
 
 int main(int argc, char* argv[])
 {
@@ -59,6 +61,9 @@ int main(int argc, char* argv[])
         }
         std::cout << "--- end demo ---\n\n";
     }
+
+    // std::unordered_map example
+    unordered_map_examples();
 
     // App termination loop
     for (int i = 5; i >= 0; i--)
