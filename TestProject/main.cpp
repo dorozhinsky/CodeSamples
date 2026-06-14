@@ -11,6 +11,13 @@
 #include <future>
 #include <chrono>
 #include <memory>
+#include <algorithm>
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+
+#include "unordered_map_example.hpp"
 
 
 int main(int argc, char* argv[])
@@ -59,6 +66,109 @@ int main(int argc, char* argv[])
         }
         std::cout << "--- end demo ---\n\n";
     }
+
+    // std::remove and std::erase example
+    {
+        std::cout << "\n--- std::remove and std::erase demo ---" << '\n';
+        std::vector<std::string> names = {"Alice", "Bob", "Alice", "Carol"};
+        std::cout << "Original names: ";
+        for (const auto& name : names) {
+            std::cout << name << " ";
+        }
+        std::cout << '\n';
+
+        // std::remove shifts all elements not equal to "Alice" to the front,
+        // then returns the new logical end of the remaining range.
+        // It does not actually change container size, so we call erase()
+        // to remove the trailing elements left behind.
+        // Complexity:
+        // - std::vector, std::deque: O(N) moves + O(N) erase shift => overall O(N)
+        // - std::list, std::forward_list: O(N) element moves and O(N) erase => overall O(N)
+        // - applicable to sequence containers with mutable element access (vector, deque, list, forward_list, string)
+        names.erase(std::remove(names.begin(), names.end(), "Alice"), names.end());
+        std::cout << "After std::remove + erase: ";
+        for (const auto& name : names) {
+            std::cout << name << " ";
+        }
+        std::cout << '\n';
+
+        std::vector<int> values = {1, 2, 3, 2, 4};
+        std::cout << "Original values: ";
+        for (int value : values) {
+            std::cout << value << " ";
+        }
+        std::cout << '\n';
+
+        values.erase(std::remove(values.begin(), values.end(), 2), values.end());
+        std::cout << "After erase-remove idiom: ";
+        for (int value : values) {
+            std::cout << value << " ";
+        }
+        std::cout << '\n';
+
+        std::list<std::string> nameList = {"Alice", "Bob", "Alice", "Carol"};
+        std::cout << "Original list values: ";
+        for (const auto& name : nameList) {
+            std::cout << name << " ";
+        }
+        std::cout << '\n';
+
+        // std::list::remove removes elements equal to the given value directly.
+        // It works in-place by unlinking matching nodes, without shifting elements.
+        nameList.remove("Alice");
+        std::cout << "After list.remove(\"Alice\"): ";
+        for (const auto& name : nameList) {
+            std::cout << name << " ";
+        }
+        std::cout << '\n';
+        std::cout << "--- end demo ---\n";
+    }
+
+    // std::map and std::set example
+    {
+        std::cout << "\n--- std::map and std::set demo ---" << '\n';
+        std::map<std::string, int> scores;
+        scores["Alice"] = 90;
+        scores["Bob"] = 85;
+        scores["Carol"] = 95;
+
+        std::cout << "Scores map:\n";
+        for (const auto& entry : scores) {
+            std::cout << "  " << entry.first << ": " << entry.second << '\n';
+        }
+
+        auto it = scores.find("Bob");
+        if (it != scores.end()) {
+            std::cout << "Found Bob with score " << it->second << '\n';
+        }
+
+        scores.erase("Alice");
+        std::cout << "After erase(\"Alice\"):";
+        for (const auto& entry : scores) {
+            std::cout << " " << entry.first;
+        }
+        std::cout << '\n';
+
+        std::set<std::string> names_set = {"Alice", "Bob", "Alice", "Carol"};
+        std::cout << "Set contents: ";
+        for (const auto& name : names_set) {
+            std::cout << name << " ";
+        }
+        std::cout << '\n';
+
+        names_set.insert("Dave");
+        names_set.erase("Bob");
+        std::cout << "After insert(\"Dave\") and erase(\"Bob\"): ";
+        for (const auto& name : names_set) {
+            std::cout << name << " ";
+        }
+        std::cout << '\n';
+        std::cout << "Contains Carol: " << std::boolalpha << (names_set.count("Carol") > 0) << '\n';
+        std::cout << "--- end demo ---\n";
+    }
+
+    // std::unordered_map example
+    unordered_map_examples();
 
     // App termination loop
     for (int i = 5; i >= 0; i--)

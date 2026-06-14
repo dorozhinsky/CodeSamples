@@ -1,6 +1,6 @@
 CXXFLAGS =	-O2 -g -Wall -fmessage-length=0
 
-OBJS =		main.o
+OBJS =		main.o unordered_map_example.o
 
 LIBS =
 
